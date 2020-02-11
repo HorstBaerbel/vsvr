@@ -33,8 +33,8 @@ make -j $(grep -c '^processor' /proc/cpuinfo 2>/dev/null)
 
 # How to use?
 
-* Clone the library as a subdirectory to your project:  
-```git clone https://github.com/HorstBaerbel/vsvr```
+* Clone the library as a submodule to your project:  
+```git submodule add https://github.com/HorstBaerbel/vsvr vsvr```
 
 * Adjust your CMakeLists.txt:
   * Include the library subdirectory in your project:  
