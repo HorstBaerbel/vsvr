@@ -4,29 +4,33 @@
 #include "vkresource.h"
 #include "vkbuffer.h"
 #include <vector>
+#include <utility>
 #include <string>
 
 namespace vsvr
 {
 
 /// @brief Index buffer.
-class IndexBuffer : public Resource
+class IndexBuffer
 {
 public:
-    RESOURCE_FUNCTIONS_H(IndexBuffer)
+    SHAREDRESOURCE_FUNCTIONS_H(IndexBuffer)
 
-    /// @brief Construct a index buffer on device. Call update() to fill with data.
+    /// @brief Construct a vertex buffer on device. Call update() to fill with data.
     /// @note Make sure you set the vk::BufferUsageFlagBits::eIndexBuffer flag bit.
-    void create(vk::PhysicalDevice physicalDevice, vk::Device logicalDevice, vk::IndexType indexType, RawData &data, const Buffer::Settings &settings);
+    IndexBuffer(MemoryPool::Ptr pool, vk::IndexType indexType, vk::DeviceSize size, const Buffer::Settings &settings);
 
-    /// @brief Update index data. If the byteSizes of data is bigger than 
-    /// the underlying buffer, this will re-allocate the buffer!
+    /// @brief Destroy vertex buffer on device. Note that the buffer will immediately be destroyed.
+    ~IndexBuffer();
+
+    /// @brief Update index data. Will reallocate depending on ReallocationStrategy passed in constructor.
     void update(const RawData &data);
 
     vk::IndexType indexType() const;
 
 private:
-    Buffer m_buffer;
+    MemoryPool::Ptr m_pool;
+    Buffer::Ptr m_buffer;
     vk::IndexType m_indexType;
 };
 
@@ -43,39 +47,32 @@ struct Attribute
 };
 
 /// @brief Vertex buffer with non-interleaved attribute data.
-class VertexBuffer : public Resource
+class VertexBuffer
 {
 public:
-    RESOURCE_FUNCTIONS_H(VertexBuffer)
+    SHAREDRESOURCE_FUNCTIONS_H(VertexBuffer)
 
     /// @brief Construct a vertex buffer on device. Call update() to fill with data.
     /// @note Make sure you set the vk::BufferUsageFlagBits::eVertexBuffer flag bit.
-    void create(vk::PhysicalDevice physicalDevice, vk::Device logicalDevice, const std::vector<Attribute> &attributes, const std::vector<RawData> &data, const Buffer::Settings &settings);
+    VertexBuffer(MemoryPool::Ptr pool, const std::vector<std::pair<Attribute, vk::DeviceSize>> &attributes, const Buffer::Settings &settings);
 
-    /// @brief Update attribute data. If the byteSizes of the combined attributes is bigger than 
-    /// the underlying buffer, this will re-allocate the buffer and update the offsets!
+    /// @brief Destroy vertex buffer on device. Note that the buffer will immediately be destroyed.
+    ~VertexBuffer();
+
+    /// @brief Update attribute data. Will reallocate depending on ReallocationStrategy passed in constructor.
     /// @note data must have the SAME order as used in setAttributes()!
     void update(const std::vector<RawData> &data);
 
-    const std::vector<VkDeviceSize> & offsets() const;
+    std::vector<Buffer::Ptr> buffers() const;
+    std::vector<vk::DeviceSize> offsets() const;
     uint32_t firstBinding() const;
     uint32_t bindingCount() const;
     const std::vector<vk::VertexInputBindingDescription> & vertexBindings() const;
     const std::vector<vk::VertexInputAttributeDescription> & attributeBindings() const;
 
 private:
-    void updateOffsets();
-    void updateBindingInfo();
-
-    struct AttributeInternal
-    {
-        Attribute info;
-        RawData data;
-    };
-
-    Buffer m_buffer;
-    std::vector<AttributeInternal> m_attributes;
-    std::vector<vk::DeviceSize> m_offsets;
+    MemoryPool::Ptr m_pool;
+    std::vector<Buffer::Ptr> m_buffers;
     uint32_t m_firstBinding = 0;
     std::vector<vk::VertexInputBindingDescription> m_vertexBindings;
     std::vector<vk::VertexInputAttributeDescription> m_attributeBindings;

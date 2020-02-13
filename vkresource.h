@@ -5,42 +5,54 @@
 namespace vsvr
 {
 
-/// @brief This declares all functions necessary for classes derived from Resource
-#define RESOURCE_FUNCTIONS_H(CLASSNAME) \
+/// @brief This declares all functions necessary for classes that are considered 
+/// shared resources and should not be copied.
+#define SHAREDRESOURCE_FUNCTIONS_H(CLASSNAME) \
 using Ptr = std::shared_ptr<CLASSNAME>; \
 using ConstPtr = std::shared_ptr<const CLASSNAME>; \
 CLASSNAME(); \
 CLASSNAME(const CLASSNAME &other) = delete; \
 CLASSNAME &operator=(const CLASSNAME &other) = delete; \
 CLASSNAME(CLASSNAME &&other); \
-CLASSNAME &operator=(CLASSNAME &&other); \
+CLASSNAME &operator=(CLASSNAME &&other);
+
+/// @brief This defines some functions necessary for classes that are considered 
+/// shared resources and should not be copied.
+#define SHAREDRESOURCE_FUNCTIONS_CPP(CLASSNAME) \
+CLASSNAME::CLASSNAME() {} \
+CLASSNAME::CLASSNAME(CLASSNAME &&other) { *this = std::move(other); }
+
+/// @brief This declares all functions necessary for classes derived from DeviceResource
+#define DEVICERESOURCE_FUNCTIONS_H(CLASSNAME) \
+SHAREDRESOURCE_FUNCTIONS_H(CLASSNAME) \
 protected: \
 virtual void destroyResource() override; \
 public:
 
-/// @brief This defines some functions necessary for classes derived from Resource
-#define RESOURCE_FUNCTIONS_CPP(CLASSNAME) \
+/// @brief This defines some functions necessary for classes derived from DeviceResource
+#define DEVICERESOURCE_FUNCTIONS_CPP(CLASSNAME) \
 CLASSNAME::CLASSNAME() {} \
-CLASSNAME::CLASSNAME(CLASSNAME &&other) : Resource(std::move(other)) { *this = std::move(other); }
+CLASSNAME::CLASSNAME(CLASSNAME &&other) : DeviceResource(std::move(other)) { *this = std::move(other); }
 
-class Resource
+/// @brief A resource on a logical device, e.g. a desriptor pool or memeory pool.
+class DeviceResource
 {
 public:
-    /// @brief Resources can be default constructed.
-    Resource();
+    /// @brief DeviceResource can be default constructed.
+    DeviceResource();
 
-    /// @brief Resources are not copyable.
-    Resource(const Resource &other) = delete;
-    /// @brief Resources are not copyable.
-    Resource &operator=(const Resource &other) = delete;
+    /// @brief DeviceResource are not copyable.
+    DeviceResource(const DeviceResource &other) = delete;
+    /// @brief DeviceResource are not copyable.
+    DeviceResource &operator=(const DeviceResource &other) = delete;
 
-    /// @brief Resources are moveable. Invalidates other.
-    Resource(Resource &&other);
-    /// @brief Resources are not moveable. Invalidates other.
-    Resource &operator=(Resource &&other);
+    /// @brief DeviceResource are moveable. Invalidates other.
+    DeviceResource(DeviceResource &&other);
+    /// @brief DeviceResource are moveable. Invalidates other.
+    DeviceResource &operator=(DeviceResource &&other);
 
     /// @brief Destructor. will call destroy() if m_isValid is set.
-    virtual ~Resource();
+    virtual ~DeviceResource();
 
     /// @brief Call this from a derived class to see if the resource can be used.
     bool isValid() const;

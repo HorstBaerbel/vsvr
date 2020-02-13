@@ -6,13 +6,13 @@
 namespace vsvr
 {
 
-RESOURCE_FUNCTIONS_CPP(PipelineLayout)
+DEVICERESOURCE_FUNCTIONS_CPP(PipelineLayout)
 
 PipelineLayout &PipelineLayout::operator=(PipelineLayout &&other)
 {
     if (&other != this)
     {
-        Resource::operator=(std::move(other));
+        DeviceResource::operator=(std::move(other));
         m_layout = std::move(other.m_layout); other.m_layout = nullptr;
     }
     return *this;
@@ -73,13 +73,13 @@ Pipeline::Settings Pipeline::Settings::Default()
     return settings;
 }
 
-RESOURCE_FUNCTIONS_CPP(Pipeline)
+DEVICERESOURCE_FUNCTIONS_CPP(Pipeline)
 
 Pipeline &Pipeline::operator=(Pipeline &&other)
 {
     if (&other != this)
     {
-        Resource::operator=(std::move(other));
+        DeviceResource::operator=(std::move(other));
         m_pipeline = std::move(other.m_pipeline); other.m_pipeline = nullptr;
     }
     return *this;

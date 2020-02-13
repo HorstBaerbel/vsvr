@@ -9,10 +9,10 @@
 namespace vsvr
 {
 
-class Shader: public Resource
+class Shader: public DeviceResource
 {
 public:
-    RESOURCE_FUNCTIONS_H(Shader)
+    DEVICERESOURCE_FUNCTIONS_H(Shader)
 
     /// @brief Construct a shader module from SPIR-V code.
     void create(vk::Device logicalDevice, const std::vector<char> &code, vk::ShaderStageFlagBits stage, const std::string &entryPoint = "main");

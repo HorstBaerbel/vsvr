@@ -7,13 +7,13 @@
 namespace vsvr
 {
 
-RESOURCE_FUNCTIONS_CPP(Shader)
+DEVICERESOURCE_FUNCTIONS_CPP(Shader)
 
 Shader & Shader::operator=(Shader &&other)
 {
     if (&other != this)
 	{
-		Resource::operator=(std::move(other));
+		DeviceResource::operator=(std::move(other));
         m_module = std::move(other.m_module); other.m_module = nullptr;
         m_stage = std::move(other.m_stage);
         m_entryPoint = std::move(other.m_entryPoint);

@@ -37,6 +37,7 @@ LIST(APPEND INCLUDE_DIRECTORIES
 LIST(APPEND VSVR_SOURCES
     vkbuffer.cpp
     vkbuffers.cpp
+    vkdescriptor.cpp
     vkdevice.cpp
     vkpipeline.cpp
     vkrenderpass.cpp

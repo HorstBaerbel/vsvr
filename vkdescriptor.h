@@ -9,11 +9,11 @@
 namespace vsvr
 {
 
-/// @brief
-class DescriptorSetLayout: public Resource
+/// @brief Shader resource binding types for a pipeline.
+class DescriptorSetLayout: public DeviceResource
 {
 public:
-    RESOURCE_FUNCTIONS_H(DescriptorSetLayout)
+    DEVICERESOURCE_FUNCTIONS_H(DescriptorSetLayout)
 
     /// @brief Get descriptor set layout.
     const vk::DescriptorSetLayout layout() const;
@@ -25,50 +25,43 @@ private:
     vk::DescriptorSetLayout m_layout = nullptr;
 };
 
-class DescriptorPool;
-
-/// @brief
-class DescriptorSet: public Resource
+/// @brief Shader resource binding data for a pipeline.
+struct DescriptorSet
 {
-public:
-    RESOURCE_FUNCTIONS_H(DescriptorSet)
-
-    /// @brief Get descriptor set handle.
-    const vk::DescriptorSet set() const;
-
-    /// @brief Copy data to device memory.
-    void update(const std::vector<void *> &data, const std::vector<size_t> &size);
-
-    /// @brief Bind the buffer for a specific command buffer.
-    void bind(vk::CommandBuffer commandBuffer, uint32_t firstBinding = 0);
-
-protected:
-    /// @brief Create descriptor set. Can not be called from outside.
-    void create(vk::Device logicalDevice, vk::DescriptorPool pool, const std::vector<DescriptorSetLayout::ConstPtr> &layout, const std::vector<Buffer::ConstPtr> &buffers);
-    /// @brief Make sure DescriptorPool can use create().
-    //friend DescriptorSet::Ptr DescriptorPool::createDescriptorSet(const std::vector<DescriptorSetLayout::ConstPtr> &layouts, const std::vector<Buffer::ConstPtr> &buffers);
-
-private:
-    vk::DescriptorSet m_set = nullptr;
-    vk::DescriptorPool m_pool = nullptr;
+    std::vector<DescriptorSetLayout::ConstPtr> layouts;
+    std::vector<Buffer::ConstPtr> buffers;
+    uint32_t binding = 0;
 };
 
 /// @brief A descriptor pool from which we allocate descriptor sets.
-class DescriptorPool: public Resource
+class DescriptorPool: public DeviceResource
 {
 public:
-    RESOURCE_FUNCTIONS_H(DescriptorPool)
+    DEVICERESOURCE_FUNCTIONS_H(DescriptorPool)
 
     /// @brief Create descriptor pool.
     void create(vk::Device logicalDevice);
 
-    /// @brief Create descriptor pool.
-    DescriptorSet::Ptr createDescriptorSet(const std::vector<DescriptorSetLayout::ConstPtr> &layouts, const std::vector<Buffer::ConstPtr> &buffers);
+    /// @brief Allocate descriptor sets from pool. Call this for ALL layouts you want to use in a frame.
+    /// Then use 
+    std::vector<DescriptorSet> createDescriptorSets(const std::vector<DescriptorSetLayout::ConstPtr> &sets);
 
-    /// @brief Get buffer handle.
-    const vk::DescriptorPool pool() const;
+    /// @brief Updates descriptor sets with data from buffers.
+    /// Must call createDescriptorSets first
+    std::vector<DescriptorSet> update(const std::vector<DescriptorSet> &sets);
+
+    /// @brief Reset the pool for reusing it in a different frame.
+    /// This will destroy all descriptor sets.
+    void reset();
 
 private:
+    struct DescriptorSetInternal
+    {
+        DescriptorSetLayout::ConstPtr layout;
+        Buffer::ConstPtr buffer;
+        vk::DescriptorSet set;
+    };
+
     vk::DescriptorPool m_pool = nullptr;
 };
 

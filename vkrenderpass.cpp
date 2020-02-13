@@ -6,13 +6,13 @@
 namespace vsvr
 {
 
-RESOURCE_FUNCTIONS_CPP(RenderPass)
+DEVICERESOURCE_FUNCTIONS_CPP(RenderPass)
 
 RenderPass & RenderPass::operator=(RenderPass &&other)
 {
     if (&other != this)
 	{
-		Resource::operator=(std::move(other));
+		DeviceResource::operator=(std::move(other));
         m_pass = std::move(other.m_pass); other.m_pass = nullptr;
         m_currentCommandBuffer = std::move(other.m_currentCommandBuffer); other.m_currentCommandBuffer = nullptr;
 	}

@@ -8,7 +8,7 @@
 namespace vsvr
 {
 
-class RenderPass: public Resource
+class RenderPass: public DeviceResource
 {
 public:
     struct Settings
@@ -19,7 +19,7 @@ public:
         std::vector<vk::SubpassDependency> dependencies = {};
     };
 
-    RESOURCE_FUNCTIONS_H(RenderPass)
+    DEVICERESOURCE_FUNCTIONS_H(RenderPass)
 
     /// @brief Construct a render pass.
     void create(vk::Device logicalDevice, const Settings &settings);

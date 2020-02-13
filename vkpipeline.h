@@ -12,7 +12,7 @@
 namespace vsvr
 {
 
-class PipelineLayout: public Resource
+class PipelineLayout: public DeviceResource
 {
 public:
     /// @brief Encapsulates all relevant pipline layout settings.
@@ -22,7 +22,7 @@ public:
         std::vector<vk::PushConstantRange> pushConstants;
     };
 
-    RESOURCE_FUNCTIONS_H(PipelineLayout)
+    DEVICERESOURCE_FUNCTIONS_H(PipelineLayout)
 
     /// @brief Layout constructor. Will allocate buffer and device memory.
     void create(vk::Device logicalDevice, const Settings & settings = Settings());
@@ -34,7 +34,7 @@ private:
     vk::PipelineLayout m_layout = nullptr;
 };
 
-class Pipeline: public Resource
+class Pipeline: public DeviceResource
 {
 public:
     struct Settings
@@ -55,7 +55,7 @@ public:
         static Settings Default();
     };
 
-    RESOURCE_FUNCTIONS_H(Pipeline)
+    DEVICERESOURCE_FUNCTIONS_H(Pipeline)
 
     /// @brief Create pipeline.
     void create(vk::Device logicalDevice, RenderPass::ConstPtr renderPass, const PipelineLayout &layout, const Settings &settings);

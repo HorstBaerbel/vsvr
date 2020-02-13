@@ -6,16 +6,16 @@
 namespace vsvr
 {
 
-Resource::Resource()
+DeviceResource::DeviceResource()
 {
 }
 
-Resource::Resource(Resource &&other)
+DeviceResource::DeviceResource(DeviceResource &&other)
 {
 	*this = std::move(other);
 }
 
-Resource & Resource::operator=(Resource &&other)
+DeviceResource & DeviceResource::operator=(DeviceResource &&other)
 {
     if (&other != this)
     {
@@ -25,12 +25,12 @@ Resource & Resource::operator=(Resource &&other)
     return *this;
 }
 
-Resource::~Resource()
+DeviceResource::~DeviceResource()
 {
     destroy();
 }
 
-void Resource::setCreated(vk::Device logicalDevice)
+void DeviceResource::setCreated(vk::Device logicalDevice)
 {
     if (m_isValid)
     {
@@ -40,17 +40,17 @@ void Resource::setCreated(vk::Device logicalDevice)
     m_logicalDevice = logicalDevice;
 }
 
-bool Resource::isValid() const
+bool DeviceResource::isValid() const
 {
     return m_isValid;
 }
 
-vk::Device Resource::logicalDevice() const
+vk::Device DeviceResource::logicalDevice() const
 {
     return m_logicalDevice;
 }
 
-void Resource::destroy()
+void DeviceResource::destroy()
 {
     if (m_isValid)
     {

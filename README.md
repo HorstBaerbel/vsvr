@@ -1,11 +1,12 @@
 # VSVR - The very simple Vulkan renderer
 
-This a very simple and basic Vulkan rendering framework / library that abstracts some of the Vulkan objects and functions. It was supposed to make my life developing simple Vulkan applications easier, but don't expect too much from it. Use as you like according to the [MIT LICENSE](LICENSE).
+This a very simple and basic Vulkan rendering framework / library that abstracts some of the Vulkan objects and functions using C++14 in one project without any unecessary submodules / libraries. It was supposed to make my life developing simple Vulkan applications easier, but don't expect too much from it. Use as you like according to the [MIT LICENSE](LICENSE).
 
 # How to build?
 
 ## Prequisites
 
+* A C++14-capable compiler.
 * [CMake](https://cmake.org/) for building.
 * [GLFW](https://www.glfw.org/) for OS window and surface handling.
 * [Vulkan SDK](https://vulkan.lunarg.com/) for Vulkan.
