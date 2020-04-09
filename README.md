@@ -1,5 +1,7 @@
 # VSVR - The very simple Vulkan renderer
 
+![C/C++ CI](https://github.com/HorstBaerbel/vsvr/workflows/C/C++%20CI/badge.svg)
+
 This a very simple and basic Vulkan rendering framework / library that abstracts some of the Vulkan objects and functions using C++14 in one project without any unecessary submodules / libraries. It was supposed to make my life developing simple Vulkan applications easier, but don't expect too much from it. Use as you like according to the [MIT LICENSE](LICENSE).
 
 # How to build?
